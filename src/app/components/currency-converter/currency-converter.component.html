@@ -1,0 +1,172 @@
+<mat-card appCardSurface="high" class="converter-card">
+  <mat-card-header>
+    <div>
+      <mat-card-title>Convert currencies</mat-card-title>
+      <mat-card-subtitle>
+        Real-time access to the Free Currency API with historical rates.
+      </mat-card-subtitle>
+    </div>
+  </mat-card-header>
+
+  <mat-progress-bar
+    *ngIf="isBusy"
+    mode="indeterminate"
+    aria-label="Currency data is loading"
+  ></mat-progress-bar>
+
+  <mat-card-content>
+    <form
+      class="converter-form"
+      [formGroup]="converterForm"
+      (ngSubmit)="onSubmit()"
+    >
+      <div class="amount-row">
+        <mat-form-field appearance="outline" floatLabel="always">
+          <mat-label>Amount</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="amount"
+            min="0.01"
+            step="0.01"
+            inputmode="decimal"
+            placeholder="0.00"
+            required
+            aria-describedby="amountHint"
+          />
+          <mat-hint id="amountHint">Minimum 0.01</mat-hint>
+          <mat-error *ngIf="converterForm.controls.amount.hasError('required')">
+            Amount is required.
+          </mat-error>
+          <mat-error *ngIf="converterForm.controls.amount.hasError('min')">
+            Amount must be greater than zero.
+          </mat-error>
+        </mat-form-field>
+        <button
+          mat-icon-button
+          type="button"
+          class="swap-button"
+          (click)="swapCurrencies()"
+          [disabled]="isCurrenciesLoading"
+          aria-label="Swap selected currencies"
+          matTooltip="Swap currencies"
+        >
+          <mat-icon>sync_alt</mat-icon>
+        </button>
+      </div>
+
+      <div class="currency-row">
+        <mat-form-field appearance="outline">
+          <mat-label>From currency</mat-label>
+          <mat-select formControlName="baseCurrency" required>
+            <mat-option *ngIf="isCurrenciesLoading" disabled>
+              Loading currencies...
+            </mat-option>
+            <mat-option
+              *ngFor="let option of currencies; trackBy: trackCurrency"
+              [value]="option.code"
+            >
+              {{ option.code }} · {{ option.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>To currency</mat-label>
+          <mat-select formControlName="targetCurrency" required>
+            <mat-option *ngIf="isCurrenciesLoading" disabled>
+              Loading currencies...
+            </mat-option>
+            <mat-option
+              *ngFor="let option of currencies; trackBy: trackCurrency"
+              [value]="option.code"
+            >
+              {{ option.code }} · {{ option.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Historical rate date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          placeholder="MM/DD/YYYY"
+          formControlName="date"
+          [max]="today"
+          [min]="earliestDate"
+          required
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-hint>Conversions use the rate from this date.</mat-hint>
+        <mat-error *ngIf="converterForm.controls.date.hasError('required')">
+          Please choose a date.
+        </mat-error>
+      </mat-form-field>
+
+      <button
+        mat-flat-button
+        color="primary"
+        class="submit-button"
+        type="submit"
+        [disabled]="
+          converterForm.invalid || isConverting || isCurrenciesLoading
+        "
+      >
+        <ng-container *ngIf="isConverting; else submitLabel">
+          <mat-progress-spinner
+            diameter="20"
+            strokeWidth="3"
+            mode="indeterminate"
+            aria-label="Converting currencies"
+          ></mat-progress-spinner>
+        </ng-container>
+        <ng-template #submitLabel> Convert </ng-template>
+      </button>
+    </form>
+
+    <div *ngIf="errorMessage" class="error-banner" role="alert">
+      <!-- <mat-icon aria-hidden="true">error_outline</mat-icon> -->
+      <div class="error-copy">
+        <p class="error-title">
+          {{ errorMessage }}
+        </p>
+        <p *ngIf="errorDetails" class="error-details">
+          {{ errorDetails }}
+        </p>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <section *ngIf="conversionResult as result" class="result-section">
+      <div class="result-headline">
+        <div class="amount">
+          <span class="base">
+            {{ result.amount | number : "1.2-4" }} {{ result.baseCurrency }}
+          </span>
+          <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+          <span class="converted">
+            {{ result.convertedAmount | number : "1.2-4" }}
+            {{ result.targetCurrency }}
+          </span>
+        </div>
+        <mat-chip-set>
+          <mat-chip appearance="outlined">
+            Rate {{ result.rate | number : "1.4-6" }}
+          </mat-chip>
+          <mat-chip appearance="outlined">
+            {{ result.date | date : "mediumDate" }}
+          </mat-chip>
+        </mat-chip-set>
+      </div>
+      <p class="result-caption">
+        Calculation performed at
+        {{ (result.date | date : "fullDate") ?? result.date }} using Free
+        Currency API historical data.
+      </p>
+    </section>
+  </mat-card-content>
+</mat-card>

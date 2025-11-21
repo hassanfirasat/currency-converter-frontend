@@ -1,0 +1,49 @@
+<ng-container *ngIf="history$ | async as history">
+  <mat-card appCardSurface class="history-card">
+    <mat-card-header>
+      <div>
+        <mat-card-title>Conversion history</mat-card-title>
+        <mat-card-subtitle>Stored locally on this device</mat-card-subtitle>
+      </div>
+      <button
+        mat-stroked-button
+        color="primary"
+        (click)="clearHistory()"
+        [disabled]="!history.length"
+        matTooltip="Remove all saved conversions"
+      >
+        Clear
+      </button>
+    </mat-card-header>
+
+    <mat-card-content>
+      <ng-container *ngIf="history.length; else emptyState">
+        <mat-list>
+          <mat-list-item
+            *ngFor="let record of history; trackBy: trackRecord"
+            lines="4"
+          >
+            <div matListItemTitle>
+              {{ record.amount | number : "1.2-4" }} {{ record.baseCurrency }}
+              →
+              {{ record.convertedAmount | number : "1.2-4" }}
+              {{ record.targetCurrency }}
+            </div>
+            <div matListItemLine>
+              Rate {{ record.rate | number : "1.4-6" }} on
+              {{ record.date | date : "mediumDate" }}
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </ng-container>
+
+      <ng-template #emptyState>
+        <div class="empty-state">
+          <mat-icon fontIcon="history"></mat-icon>
+          <p>No conversions yet.</p>
+          <span>Run your first conversion to build the log.</span>
+        </div>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</ng-container>

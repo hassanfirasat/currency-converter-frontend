@@ -1,0 +1,6 @@
+[dev]
+  framework = "angular"
+  command = "ng serve"
+  targetPort = 4200
+  port = 8888
+  timeout = 60000  # 60 seconds

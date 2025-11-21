@@ -1,0 +1,75 @@
+:host {
+  display: block;
+}
+
+.history-card {
+  width: 100%;
+  border-radius: 20px;
+  border: none;
+
+  mat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+
+    button {
+      flex-shrink: 0;
+    }
+  }
+}
+
+mat-list {
+  max-height: 480px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+mat-list-item {
+  border-bottom: 1px solid color-mix(in srgb, var(--app-border) 80%, transparent);
+  padding-block: 0.75rem;
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+
+  .mat-mdc-list-item-title,
+  .mat-mdc-list-item-line {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    line-height: 1.3;
+  }
+}
+
+.meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--app-on-surface) 70%, transparent);
+  flex-wrap: wrap;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.25rem;
+  padding: 2rem 1rem;
+  color: color-mix(in srgb, var(--app-on-surface) 70%, transparent);
+
+  mat-icon {
+    font-size: 2.25rem;
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  p {
+    margin: 0.5rem 0 0;
+    font-weight: 600;
+  }
+}
+

@@ -1,0 +1,28 @@
+<mat-toolbar color="primary" class="app-toolbar">
+  <div class="toolbar-content">
+    <div class="branding">
+      <mat-icon fontIcon="sync_alt" aria-hidden="true"></mat-icon>
+      <div class="titles">
+        <span class="title">Currency Converter</span>
+        <span class="subtitle">Historical foreign exchange lookup</span>
+      </div>
+    </div>
+    <a
+      class="doc-link"
+      href="https://freecurrencyapi.com/docs/"
+      target="_blank"
+      rel="noreferrer noopener"
+    >
+      <mat-icon fontIcon="open_in_new" aria-hidden="true"></mat-icon>
+    </a>
+  </div>
+</mat-toolbar>
+
+<main class="dashboard">
+  <section class="panel panel--primary">
+    <app-currency-converter></app-currency-converter>
+  </section>
+  <section class="panel panel--secondary">
+    <app-conversion-history></app-conversion-history>
+  </section>
+</main>

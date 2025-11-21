@@ -1,0 +1,55 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$primary-palette: mat.$cyan-palette;
+$tertiary-palette: mat.$blue-palette;
+$warn-palette: mat.$red-palette;
+
+$app-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: $primary-palette,
+    tertiary: $tertiary-palette,
+  ),
+));
+
+:root {
+  @include mat.core-theme($app-theme);
+  @include mat.all-component-themes($app-theme);
+
+  --app-primary: #{mat.get-theme-color($app-theme, primary, 40)};
+  --app-surface: #f4f6fb;
+  --app-on-surface: #0f172a;
+  --app-border: #e2e8f0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family:
+    'Inter',
+    'Segoe UI',
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  background-color: var(--app-surface);
+  color: var(--app-on-surface);
+}
+
+button {
+  font-family: inherit;
+}
+
+.card-surface {
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid color-mix(in srgb, var(--app-border) 70%, transparent);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+}
